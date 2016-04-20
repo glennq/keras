@@ -6,8 +6,11 @@ def binary_accuracy(y_true, y_pred):
 
 
 def categorical_accuracy(y_true, y_pred):
-    return K.mean(K.equal(K.argmax(y_true, axis=-1),
-                  K.argmax(y_pred, axis=-1)))
+    if K.ndim(y_true) < K.ndim(y_pred):
+        return K.mean(K.equal(y_true, K.argmax(y_pred, axis=-1)))
+    else:
+        return K.mean(K.equal(K.argmax(y_true, axis=-1),
+                              K.argmax(y_pred, axis=-1)))
 
 
 from .utils.generic_utils import get_from_module
