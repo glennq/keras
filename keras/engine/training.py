@@ -569,7 +569,13 @@ class Model(Container):
         for i in range(len(self.outputs)):
             shape = self.internal_output_shapes[i]
             name = self.output_names[i]
-            self.targets.append(K.placeholder(ndim=len(shape), name=name + '_target'))
+            loss_func = loss_functions[i]
+            if loss_func == objectives.sparse_categorical_crossentropy:
+                target = K.placeholder(
+                    ndim=len(shape)-1, name=name + '_target')
+            else:
+                target = K.placeholder(ndim=len(shape), name=name + '_target')
+            self.targets.append(target)
 
         # compute total loss
         total_loss = None
